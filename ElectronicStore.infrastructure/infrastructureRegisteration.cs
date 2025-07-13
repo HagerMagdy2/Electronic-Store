@@ -1,5 +1,8 @@
 ﻿using ElectronicStore.Core.Interfaces;
+using ElectronicStore.infrastructure.Data;
 using ElectronicStore.infrastructure.Repositries;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -11,7 +14,7 @@ namespace ElectronicStore.infrastructure
 {
     public static class infrastructureRegisteration
     {
-        public static IServiceCollection InfrastructureConfigration(this IServiceCollection services)
+        public static IServiceCollection InfrastructureConfigration(this IServiceCollection services , IConfiguration configuration)
         {
             //services.AddTransient
             //services.AddSingleton
@@ -21,6 +24,10 @@ namespace ElectronicStore.infrastructure
             //services.AddScoped<IProductRepositry, ProductRepositry>();
             //services.AddScoped<IPhotoRepositry, PhotoRepositry>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddDbContext<AppDbContext>( options =>
+            {
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+            });
 
             return services;
         }

@@ -1,4 +1,4 @@
-
+using ElectronicStore.infrastructure;
 namespace ElectronicStore.API
 {
     public class Program
@@ -13,6 +13,7 @@ namespace ElectronicStore.API
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.InfrastructureConfigration(builder.Configuration);
 
             var app = builder.Build();
 
