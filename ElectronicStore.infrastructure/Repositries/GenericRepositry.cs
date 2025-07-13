@@ -65,5 +65,15 @@ namespace ElectronicStore.infrastructure.Repositries
             _context.Entry(entity).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
+
+        Task IGenericRepositry<T>.GetByIdAsync(int Id)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task IGenericRepositry<T>.GetByIdAsync(int Id, params Expression<Func<T, object>>[] includes)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
