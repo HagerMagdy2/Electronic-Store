@@ -9,5 +9,6 @@ namespace ElectronicStore.Core.Interfaces
 {
     public interface ICategoryRepositry:IGenericRepositry<Category>
     {
+
     }
 }
