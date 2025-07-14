@@ -14,9 +14,9 @@ namespace ElectronicStore.infrastructure.Repositries
 
     {
         private readonly AppDbContext _context;
-        public GenericRepositry()
+        public GenericRepositry(AppDbContext context)
         {
-            
+            _context = context;
         }
         public async Task AddAsync(T entity)
         {

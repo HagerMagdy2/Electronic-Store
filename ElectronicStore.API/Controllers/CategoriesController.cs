@@ -4,15 +4,27 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ElectronicStore.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class CategoriesController : ControllerBase
+  
+    public class CategoriesController : BaseController
     {
-        private readonly IUnitOfWork work;
-
-        public CategoriesController(IUnitOfWork work)
+        public CategoriesController(IUnitOfWork work) : base(work)
         {
-            this.work = work;
         }
+        [HttpGet("get-all")]
+        public async Task<IActionResult> GetAll()
+        {
+            try
+            {
+                var categories = await work.CategoryRepositry.GetAllAsync();
+                if (categories == null)
+                    return BadRequest();
+
+                return Ok(categories);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }   
     }
 }
