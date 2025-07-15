@@ -25,6 +25,22 @@ namespace ElectronicStore.API.Controllers
             {
                 return BadRequest(ex.Message);
             }
-        }   
+        }
+        [HttpGet("get-by-id/{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            try
+            {
+                var category = await work.CategoryRepositry.GetByIdAsync(id);
+                if (category == null)
+                    return NotFound();
+
+                return Ok(category);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message); 
+            }
+        }
     }
 }
