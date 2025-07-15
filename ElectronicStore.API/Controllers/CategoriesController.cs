@@ -15,11 +15,11 @@ namespace ElectronicStore.API.Controllers
         {
             try
             {
-                var categories = await work.CategoryRepositry.GetAllAsync();
-                if (categories == null)
+                var category = await work.CategoryRepositry.GetAllAsync();
+                if (category == null)
                     return BadRequest();
 
-                return Ok(categories);
+                return Ok(category);
             }
             catch (Exception ex)
             {

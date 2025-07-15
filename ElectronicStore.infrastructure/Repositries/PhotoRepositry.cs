@@ -13,7 +13,7 @@ namespace ElectronicStore.infrastructure.Repositries
     {
         private AppDbContext context;
 
-        public PhotoRepositry(AppDbContext context)
+        public PhotoRepositry(AppDbContext context) : base(context)
         {
             this.context = context;
         }
