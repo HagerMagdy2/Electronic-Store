@@ -103,5 +103,18 @@ namespace ElectronicStore.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
-    }
+        [HttpDelete("delete-category/{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await work.CategoryRepositry.DeleteAsync(id);
+                return Ok(new { message = "Item Has been Deleted" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        } 
+        }
 }
