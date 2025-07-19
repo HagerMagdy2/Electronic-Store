@@ -64,5 +64,44 @@ namespace ElectronicStore.API.Controllers
             }
 
         }
+        //My Way
+        //[HttpPut("update-category")]
+        //public async Task<IActionResult> Update(int Id,CategoryDTO categoryDTO)
+        //{
+        //    try
+        //    {
+        //        var category = await work.CategoryRepositry.GetByIdAsync(Id);
+        //        if (category == null)
+        //            return NotFound();
+        //        category.Name = categoryDTO.Name;
+        //        category.Description = categoryDTO.Description;
+        //        await work.CategoryRepositry.UpdateAsync(category);
+        //        return Ok(new {message= "Item Has been Updated"});
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //}
+        //another way for Update // The Video Way // using Update DTO
+        [HttpPut("update-category")]
+        public async Task<IActionResult> Update(UpdateCategoryDTO categoryDTO)
+        {
+            try
+            {
+                var category = new Category()
+                {
+                    Name = categoryDTO.Name,
+                    Description = categoryDTO.Description,
+                    Id = categoryDTO.id
+                };
+                await work.CategoryRepositry.UpdateAsync(category);
+                return Ok(new { message = "Item Has been Updated" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
