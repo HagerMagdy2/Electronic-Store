@@ -1,10 +1,12 @@
-﻿using ElectronicStore.Core.Interfaces;
+﻿using ElectronicStore.Core.DTOs;
+using ElectronicStore.Core.Entities.Product;
+using ElectronicStore.Core.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ElectronicStore.API.Controllers
 {
-  
+
     public class CategoriesController : BaseController
     {
         public CategoriesController(IUnitOfWork work) : base(work)
@@ -39,8 +41,28 @@ namespace ElectronicStore.API.Controllers
             }
             catch (Exception ex)
             {
-                return NotFound(ex.Message); 
+                return BadRequest(ex.Message);
             }
+        }
+        [HttpPost("add-category")]
+        public async Task<IActionResult> Add(CategoryDTO categoryDTO)
+        {
+            try
+            {
+                var category = new Category()
+                {
+                    Name = categoryDTO.Name,
+                    Description = categoryDTO.Description
+                };
+                await work.CategoryRepositry.AddAsync(category);
+                return Ok(new {message="Item has been Added"});
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
         }
     }
 }
