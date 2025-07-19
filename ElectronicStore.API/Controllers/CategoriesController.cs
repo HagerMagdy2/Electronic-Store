@@ -1,4 +1,5 @@
-﻿using ElectronicStore.Core.DTOs;
+﻿using AutoMapper;
+using ElectronicStore.Core.DTOs;
 using ElectronicStore.Core.Entities.Product;
 using ElectronicStore.Core.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -9,7 +10,7 @@ namespace ElectronicStore.API.Controllers
 
     public class CategoriesController : BaseController
     {
-        public CategoriesController(IUnitOfWork work) : base(work)
+        public CategoriesController(IUnitOfWork work, IMapper mapper) : base(work,mapper)
         {
         }
         [HttpGet("get-all")]
@@ -49,11 +50,7 @@ namespace ElectronicStore.API.Controllers
         {
             try
             {
-                var category = new Category()
-                {
-                    Name = categoryDTO.Name,
-                    Description = categoryDTO.Description
-                };
+                var category = mapper.Map<Category>(categoryDTO);
                 await work.CategoryRepositry.AddAsync(category);
                 return Ok(new {message="Item has been Added"});
 
@@ -85,16 +82,11 @@ namespace ElectronicStore.API.Controllers
         //}
         //another way for Update // The Video Way // using Update DTO
         [HttpPut("update-category")]
-        public async Task<IActionResult> Update(UpdateCategoryDTO categoryDTO)
+        public async Task<IActionResult> Update(UpdateCategoryDTO UpdatecategoryDTO)
         {
             try
             {
-                var category = new Category()
-                {
-                    Name = categoryDTO.Name,
-                    Description = categoryDTO.Description,
-                    Id = categoryDTO.id
-                };
+                var category = mapper.Map<Category>(UpdatecategoryDTO);
                 await work.CategoryRepositry.UpdateAsync(category);
                 return Ok(new { message = "Item Has been Updated" });
             }
