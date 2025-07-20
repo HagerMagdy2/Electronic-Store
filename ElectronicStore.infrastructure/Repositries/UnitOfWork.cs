@@ -18,6 +18,8 @@ namespace ElectronicStore.infrastructure.Repositries
         public IPhotoRepositry PhotoRepositry { get; }
 
         public IProductRepositry ProductRepositry { get; }
+
+
         public UnitOfWork(AppDbContext context)
         {
             _context = context;

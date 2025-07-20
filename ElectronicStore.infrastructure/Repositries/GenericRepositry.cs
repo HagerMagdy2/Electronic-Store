@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 namespace ElectronicStore.infrastructure.Repositries
 {
     public class GenericRepositry<T> : IGenericRepositry<T> where T : class
-
     {
         private readonly AppDbContext _context;
         public GenericRepositry(AppDbContext context)
@@ -24,6 +23,9 @@ namespace ElectronicStore.infrastructure.Repositries
             await _context.SaveChangesAsync();
         }
 
+        public async Task<int> CountAsync()
+        => await _context.Set<T>().CountAsync();
+
         public async Task DeleteAsync(int id)
         {
             var entity = await _context.Set<T>().FindAsync(id);
@@ -31,32 +33,39 @@ namespace ElectronicStore.infrastructure.Repositries
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IReadOnlyList<T>> GetAllAsync() => await _context.Set<T>().AsNoTracking().ToListAsync();
+        public async Task<IReadOnlyList<T>> GetAllAsync()
+        => await _context.Set<T>().AsNoTracking().ToListAsync();
 
-        public async Task<IReadOnlyList<T>> GetAllAsync(params Expression<Func<T, object>>[] includes)
+        public async Task<IReadOnlyList<T>> GetAllAsync(params Expression<Func<T, object>>[] Includes)
         {
             var query = _context.Set<T>().AsQueryable();
-            foreach (var include in includes)
+
+            //apply include
+            foreach (var item in Includes)
             {
-                query = query.Include(include);
+                query = query.Include(item);
             }
             return await query.ToListAsync();
         }
-
-        public async Task<T> GetByIdAsync(int Id)
+        public async Task<T> GetByIdAsync(int id, params Expression<Func<T, object>>[] includes)
         {
-            var entity= await _context.Set<T>().FindAsync(Id);
-            return entity;
-        }
+            IQueryable<T> query = _context.Set<T>();
 
-        public Task<T> GetByIdAsync(int Id, params Expression<Func<T, object>>[] includes)
-        {
-            var query = _context.Set<T>().AsQueryable();
+            // Apply includes
             foreach (var include in includes)
             {
                 query = query.Include(include);
             }
-            var entity = query.FirstOrDefaultAsync(e => EF.Property<int>(e, "Id") == Id);
+
+            // Filter by Id
+            var entity = await query.FirstOrDefaultAsync(x => EF.Property<int>(x, "Id") == id);
+            return entity;
+        }
+
+
+        public async Task<T> GetByIdAsync(int id)
+        {
+            var entity = await _context.Set<T>().FindAsync(id);
             return entity;
         }
 
@@ -66,6 +75,7 @@ namespace ElectronicStore.infrastructure.Repositries
             await _context.SaveChangesAsync();
         }
 
-      
+       
     }
 }
+
