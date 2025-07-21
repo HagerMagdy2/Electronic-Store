@@ -56,8 +56,8 @@ namespace ElectronicStore.API.Controllers
         {
             try
             {
-                var product = mapper.Map<Product>(productDTO);
-                await work.ProductRepositry.AddAsync(product);
+                //var product = mapper.Map<Product>(productDTO);
+                await work.ProductRepositry.AddAsync(productDTO);
 
                 return Ok(new ResponseAPI(200,"Product has been added"));
             }

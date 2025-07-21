@@ -1,4 +1,5 @@
-﻿using ElectronicStore.Core.Entities.Product;
+﻿using ElectronicStore.Core.DTOs;
+using ElectronicStore.Core.Entities.Product;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,5 +10,6 @@ namespace ElectronicStore.Core.Interfaces
 {
     public interface IProductRepositry:IGenericRepositry<Product>
     {
+        Task<bool> AddAsync (AddProductDTO productDTO);
     }
 }
