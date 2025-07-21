@@ -51,8 +51,8 @@ namespace ElectronicStore.API.Controllers
             }
 
         }
-        [HttpPost]
-        public async Task<IActionResult> AddProduct(ProductDTO productDTO)
+        [HttpPost("Add-Product")]
+        public async Task<IActionResult> AddProduct(AddProductDTO productDTO)
         {
             try
             {
