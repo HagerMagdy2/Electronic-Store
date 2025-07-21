@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ElectronicStore.API.Helper;
 using ElectronicStore.Core.DTOs;
+using ElectronicStore.Core.Entities.Product;
 using ElectronicStore.Core.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -49,6 +50,22 @@ namespace ElectronicStore.API.Controllers
                return BadRequest(ex.Message);
             }
 
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddProduct(ProductDTO productDTO)
+        {
+            try
+            {
+                var product = mapper.Map<Product>(productDTO);
+                await work.ProductRepositry.AddAsync(product);
+
+                return Ok(new ResponseAPI(200,"Product has been added"));
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
