@@ -34,6 +34,14 @@ namespace ElectronicStore.infrastructure.Repositries
             await context.Products.AddAsync(product);
             await context.SaveChangesAsync();
             var ImagePath = await imageManagementService.AddImageAsync(productDTO.Photo, productDTO.Name);
+            var photo = ImagePath.Select(path => new Photo
+            {
+                ImageName = path,
+                ProductId=product.Id
+            }).ToList();
+            await context.Photos.AddRangeAsync(photo);
+            await context.SaveChangesAsync();
+            return true;
         }
     }
 }
