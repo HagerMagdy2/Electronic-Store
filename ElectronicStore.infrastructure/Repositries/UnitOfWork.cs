@@ -1,4 +1,6 @@
-﻿using ElectronicStore.Core.Interfaces;
+﻿using AutoMapper;
+using ElectronicStore.Core.Interfaces;
+using ElectronicStore.Core.Services;
 using ElectronicStore.infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -12,6 +14,8 @@ namespace ElectronicStore.infrastructure.Repositries
     public class UnitOfWork : IUnitOfWork
     {
         private readonly  AppDbContext _context;
+        private readonly IMapper mapper;
+        private readonly IImageManagementService imageManagementService;
 
         public ICategoryRepositry CategoryRepositry { get; }
 
@@ -25,7 +29,7 @@ namespace ElectronicStore.infrastructure.Repositries
             _context = context;
             CategoryRepositry = new CategoryRepositry(_context);
             PhotoRepositry = new PhotoRepositry(_context);
-            ProductRepositry = new ProductRepositry(_context);
+            ProductRepositry = new ProductRepositry(_context,mapper,imageManagementService);
         }
     }
 }
