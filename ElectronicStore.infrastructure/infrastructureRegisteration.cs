@@ -1,6 +1,8 @@
 ﻿using ElectronicStore.Core.Interfaces;
+using ElectronicStore.Core.Services;
 using ElectronicStore.infrastructure.Data;
 using ElectronicStore.infrastructure.Repositries;
+using ElectronicStore.infrastructure.Repositries.Service;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,6 +26,7 @@ namespace ElectronicStore.infrastructure
             //services.AddScoped<IProductRepositry, ProductRepositry>();
             //services.AddScoped<IPhotoRepositry, PhotoRepositry>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddSingleton<IImageManagementService,ImageManagementService>();
             services.AddDbContext<AppDbContext>( options =>
             {
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));

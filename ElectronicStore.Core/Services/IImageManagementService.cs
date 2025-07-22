@@ -10,6 +10,6 @@ namespace ElectronicStore.Core.Services
     public interface IImageManagementService
     {
         Task<List<string>> AddImageAsync(IFormFileCollection files, string src);
-        Task DeleteImageAsync(string src);
+        void DeleteImageAsync(string src);
     }
 }

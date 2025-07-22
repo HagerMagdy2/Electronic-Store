@@ -49,5 +49,7 @@ namespace ElectronicStore.infrastructure.Repositries.Service
             var root = info.PhysicalPath;
             File.Delete(root);
         }
+
+     
     }
 }

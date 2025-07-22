@@ -24,12 +24,15 @@ namespace ElectronicStore.infrastructure.Repositries
         public IProductRepositry ProductRepositry { get; }
 
 
-        public UnitOfWork(AppDbContext context)
+        public UnitOfWork(AppDbContext context, IMapper mapper, IImageManagementService imageManagementService)
         {
             _context = context;
+            this.mapper = mapper;
+            this.imageManagementService = imageManagementService;
             CategoryRepositry = new CategoryRepositry(_context);
             PhotoRepositry = new PhotoRepositry(_context);
-            ProductRepositry = new ProductRepositry(_context,mapper,imageManagementService);
+            ProductRepositry = new ProductRepositry(_context, mapper, imageManagementService);
+           
         }
     }
 }
