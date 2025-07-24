@@ -68,11 +68,12 @@ namespace ElectronicStore.API.Controllers
             }
         }
         [HttpPut("Update-Product/{id}")]
-        public async Task<IActionResult> UpdateProduct(int id, UpdateProductDTO updateProoductDTO)
+        public async Task<IActionResult> UpdateProduct( UpdateProductDTO updateProoductDTO)
         {
             try
             {
-
+                await work.ProductRepositry.UpdateAsync(updateProoductDTO);
+                return Ok(new ResponseAPI(200, "Product has been Updated"));
             }
             catch (Exception ex)
             {

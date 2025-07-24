@@ -4,6 +4,7 @@ using ElectronicStore.Core.Entities.Product;
 using ElectronicStore.Core.Interfaces;
 using ElectronicStore.Core.Services;
 using ElectronicStore.infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System;
 using System.Collections.Generic;
@@ -48,5 +49,37 @@ namespace ElectronicStore.infrastructure.Repositries
             return true;
         }
 
+        public async Task<bool> UpdateAsync(UpdateProductDTO updateproductDTO)
+        {
+            if (updateproductDTO == null)
+            {
+                return false;
+            }
+            else
+            {
+                var FindProduct = await context.Products.Include(p => p.Category).Include(p => p.Photos)
+                                                        .FirstOrDefaultAsync(p => p.Id == updateproductDTO.Id);
+                if (FindProduct == null)
+                {
+                    return false;
+                }
+               mapper.Map(updateproductDTO,FindProduct);
+                var findphoto = await context.Photos.Where(p => p.ProductId == updateproductDTO.Id).ToListAsync();
+                foreach (var photo in findphoto)
+                {
+                    imageManagementService.DeleteImageAsync(photo.ImageName);
+                }
+                context.Photos.RemoveRange(findphoto);
+                var ImagePath=await imageManagementService.AddImageAsync(updateproductDTO.Photo, updateproductDTO.Name);
+                var photos = ImagePath.Select(path => new Photo
+                {
+                    ImageName = path,
+                    ProductId = updateproductDTO.Id,
+                }).ToList();
+               await context.Photos.AddRangeAsync(photos);
+                await context.SaveChangesAsync();
+                return true;
+            }
+        }
     }
 }

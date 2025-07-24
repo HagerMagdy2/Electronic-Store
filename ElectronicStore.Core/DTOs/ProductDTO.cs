@@ -31,7 +31,7 @@ namespace ElectronicStore.Core.DTOs
         public int CategoryId { get; set; }
         public IFormFileCollection Photo { get; set; }
     } 
-    public record UpdateProductDTO
+    public record UpdateProductDTO:AddProductDTO
     {
         public int Id { get; set; }
     }
