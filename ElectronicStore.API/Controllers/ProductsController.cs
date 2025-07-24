@@ -67,5 +67,18 @@ namespace ElectronicStore.API.Controllers
                 return BadRequest(new ResponseAPI(400,ex.Message));
             }
         }
+        [HttpPut("Update-Product/{id}")]
+        public async Task<IActionResult> UpdateProduct(int id, UpdateProductDTO updateProoductDTO)
+        {
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(new ResponseAPI(400, ex.Message));
+            }
+        }
     }
 }

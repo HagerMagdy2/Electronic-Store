@@ -30,5 +30,9 @@ namespace ElectronicStore.Core.DTOs
         public decimal OldPrice { get; set; }
         public int CategoryId { get; set; }
         public IFormFileCollection Photo { get; set; }
+    } 
+    public record UpdateProductDTO
+    {
+        public int Id { get; set; }
     }
 }
