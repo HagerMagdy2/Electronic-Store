@@ -1,6 +1,6 @@
 ﻿using ElectronicStore.Core.Services;
+
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.FileProviders;
 using System;
 using System.Collections.Generic;
@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ElectronicStore.infrastructure.Repositries.Service
+
 {
     public class ImageManagementService : IImageManagementService
     {
@@ -17,39 +18,48 @@ namespace ElectronicStore.infrastructure.Repositries.Service
         {
             this.fileProvider = fileProvider;
         }
+
         public async Task<List<string>> AddImageAsync(IFormFileCollection files, string src)
         {
-            var SaveImageSrc=new List<string>();
-            var ImageDirectory = Path.Combine("wwwroot", "Images",src);
-            if(!Directory.Exists(ImageDirectory))
+            List<string> SaveImageSrc = new List<string>();
+
+            var ImageDirctory = Path.Combine("wwwroot", "Images", src);
+
+            if (Directory.Exists(ImageDirctory) is not true)
             {
-                Directory.CreateDirectory(ImageDirectory);
+                Directory.CreateDirectory(ImageDirctory);
             }
+
             foreach (var item in files)
             {
                 if (item.Length > 0)
                 {
-                    //get Image name
+                    // get Image Name
                     var ImageName = item.FileName;
-                    var ImagePath = $"Images/{src}/{ImageName}";
-                   var root= Path.Combine(ImageDirectory, ImageName);
-                    using(FileStream fileStream = new FileStream(root, FileMode.Create))
+
+                    var ImageSrc = $"/Images/{src}/{ImageName}";
+
+                    var root = Path.Combine(ImageDirctory, ImageName);
+
+                    using (FileStream stream = new FileStream(root, FileMode.Create))
                     {
-                       await item.CopyToAsync(fileStream);
+                        await item.CopyToAsync(stream);
                     }
-                    SaveImageSrc.Add(ImagePath);
+                    SaveImageSrc.Add(ImageSrc);
                 }
             }
             return SaveImageSrc;
+
         }
+
+
 
         public void DeleteImageAsync(string src)
         {
             var info = fileProvider.GetFileInfo(src);
+
             var root = info.PhysicalPath;
             File.Delete(root);
         }
-
-     
     }
 }
