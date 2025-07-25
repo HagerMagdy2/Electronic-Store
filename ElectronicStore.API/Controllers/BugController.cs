@@ -21,12 +21,12 @@ namespace ElectronicStore.API.Controllers
             return Ok(category);
         }
         [HttpGet("server-error")]
-        public IActionResult ServerError()
+        public IActionResult GetServerError()
         {
             var category = work.CategoryRepositry.GetByIdAsync(1000);
-            if (category == null)
-                return NotFound();
+            category.Name = "";
             return Ok(category);
         }
+
     }
 }
