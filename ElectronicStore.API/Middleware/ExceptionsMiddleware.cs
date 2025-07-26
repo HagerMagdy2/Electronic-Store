@@ -7,9 +7,11 @@ namespace ElectronicStore.API.Middleware
     public class ExceptionsMiddleware
     {
         private readonly RequestDelegate _next;
-        public ExceptionsMiddleware(RequestDelegate next)
+        private readonly IHostEnvironment _environment;
+        public ExceptionsMiddleware(RequestDelegate next, IHostEnvironment environment)
         {
-           _next = next;
+            _next = next;
+            _environment = environment;
         }
         public async Task InvokeAsync(HttpContext context)
         {
@@ -21,8 +23,10 @@ namespace ElectronicStore.API.Middleware
             {
                 context.Response.StatusCode=(int)HttpStatusCode.InternalServerError; // Internal Server Error
                 context.Response.ContentType = "application/json";
-                var response = new ApiExceptions((int)HttpStatusCode.InternalServerError,
+                var response = _environment.IsDevelopment() ?
+                    new ApiExceptions((int)HttpStatusCode.InternalServerError,
                     ex.StackTrace,
+                    ex.Message) : new ApiExceptions((int)HttpStatusCode.InternalServerError,
                     ex.Message);
                 var json=JsonSerializer.Serialize(response);
                 await context.Response.WriteAsync(json);

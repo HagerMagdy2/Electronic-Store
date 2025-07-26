@@ -1,3 +1,4 @@
+using ElectronicStore.API.Middleware;
 using ElectronicStore.infrastructure;
 namespace ElectronicStore.API
 {
@@ -24,6 +25,7 @@ namespace ElectronicStore.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            app.UseMiddleware<ExceptionsMiddleware>();
             app.UseStatusCodePagesWithReExecute("/errors/{0}");
             app.UseHttpsRedirection();
 
