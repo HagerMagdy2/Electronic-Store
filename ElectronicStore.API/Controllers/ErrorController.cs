@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ElectronicStore.API.Controllers
 {
-    [Route("error/{StatusCode}")]
+    [Route("errors/{StatusCode}")]
     [ApiController]
     public class ErrorController : ControllerBase
     {
