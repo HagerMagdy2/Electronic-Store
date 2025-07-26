@@ -13,19 +13,29 @@ namespace ElectronicStore.API.Controllers
         {
         }
         [HttpGet("not-found")]
-        public IActionResult GetNotFound()
+        public async Task<IActionResult> GetNotFound()
         {
-            var category = work.CategoryRepositry.GetByIdAsync(1000);
-            if(category == null)
-                return NotFound();
+            var category = await work.CategoryRepositry.GetByIdAsync(100);
+            if(category == null) return NotFound();
             return Ok(category);
         }
         [HttpGet("server-error")]
-        public IActionResult GetServerError()
+        public async Task<IActionResult> GetServerError()
         {
-            var category = work.CategoryRepositry.GetByIdAsync(1000);
+            var category = await work.CategoryRepositry.GetByIdAsync(100);
             category.Name = "";
             return Ok(category);
+        }
+        [HttpGet("bad-request/{Id}")]
+        public async Task<IActionResult> GetBadRequest(int id)
+        {
+            
+            return Ok();
+        }
+        [HttpGet("bad-request/")]
+        public async Task<IActionResult> GetBadRequest()
+        {
+            return BadRequest();
         }
 
     }
