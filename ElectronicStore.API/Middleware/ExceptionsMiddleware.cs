@@ -20,6 +20,15 @@ namespace ElectronicStore.API.Middleware
         {
             try
             {
+                if (IsRequestAllowed(context)==false)
+                {
+                    context.Response.StatusCode = (int)HttpStatusCode.TooManyRequests;
+                    context.Response.ContentType = "application/json";
+                    var response = new ApiExceptions((int)HttpStatusCode.TooManyRequests,
+                        "Too many requests. Please try again later.");
+                   await context.Response.WriteAsJsonAsync(response);
+
+                }
                 await _next(context);
             }
             catch (Exception ex)
@@ -35,18 +44,38 @@ namespace ElectronicStore.API.Middleware
                 await context.Response.WriteAsync(json);
             }
         }
-        private bool IsRequestAllowed(HttpContext context) 
+        private bool IsRequestAllowed(HttpContext context)
         {
-            var ip = context.Connection.RemoteIpAddress.ToString();   
-            var cachKey=$"Rate:{ip}";
-            var dateNow=DateTime.Now;
+            var ip = context.Connection.RemoteIpAddress.ToString();
+            var cachKey = $"Rate:{ip}";
+            var dateNow = DateTime.Now;
             var (timestamp, count) = _memoryCache.GetOrCreate(cachKey, entry =>
             {
                 entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(30);
                 return (dateNow, 0);
             });
+            if (dateNow - timestamp < TimeSpan.FromSeconds(30))
+            {
+                if (count <= 8)
+                {
+                    return false;
 
+                    _memoryCache.Set(cachKey, (timestamp, count += 1), TimeSpan.FromSeconds(30));
+                    return true;
+                }
+            }
+            else
+            {
+                _memoryCache.Set(cachKey, (timestamp, count), TimeSpan.FromSeconds(30));
+
+            }
+            return true;
         }
-    }
+
+        private void ApplySecurity(HttpContext context)
+        {
+            context.Response.Headers["X-Context-Type-Options"] = "nosniff";
+        }
+        }
 
 }
