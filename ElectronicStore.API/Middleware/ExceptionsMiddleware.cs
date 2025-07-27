@@ -1,4 +1,5 @@
 ﻿using ElectronicStore.API.Helper;
+using Microsoft.Extensions.Caching.Memory;
 using System.Net;
 using System.Text.Json;
 
@@ -8,10 +9,12 @@ namespace ElectronicStore.API.Middleware
     {
         private readonly RequestDelegate _next;
         private readonly IHostEnvironment _environment;
-        public ExceptionsMiddleware(RequestDelegate next, IHostEnvironment environment)
+        private readonly IMemoryCache _memoryCache;
+        public ExceptionsMiddleware(RequestDelegate next, IHostEnvironment environment, IMemoryCache memoryCache)
         {
             _next = next;
             _environment = environment;
+            _memoryCache = memoryCache;
         }
         public async Task InvokeAsync(HttpContext context)
         {
@@ -31,6 +34,18 @@ namespace ElectronicStore.API.Middleware
                 var json=JsonSerializer.Serialize(response);
                 await context.Response.WriteAsync(json);
             }
+        }
+        private bool IsRequestAllowed(HttpContext context) 
+        {
+            var ip = context.Connection.RemoteIpAddress.ToString();   
+            var cachKey=$"Rate:{ip}";
+            var dateNow=DateTime.Now;
+            var (timestamp, count) = _memoryCache.GetOrCreate(cachKey, entry =>
+            {
+                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(30);
+                return (dateNow, 0);
+            });
+
         }
     }
 
