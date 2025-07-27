@@ -20,6 +20,7 @@ namespace ElectronicStore.API.Middleware
         {
             try
             {
+                ApplySecurity(context);
                 if (IsRequestAllowed(context)==false)
                 {
                     context.Response.StatusCode = (int)HttpStatusCode.TooManyRequests;
@@ -75,6 +76,8 @@ namespace ElectronicStore.API.Middleware
         private void ApplySecurity(HttpContext context)
         {
             context.Response.Headers["X-Context-Type-Options"] = "nosniff";
+            context.Response.Headers["X-XSS-Protection"] = "1;mode=block";
+            context.Response.Headers["X-Frame-Options"] = "DENY";
         }
         }
 
