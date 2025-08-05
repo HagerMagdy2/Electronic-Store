@@ -1,5 +1,6 @@
 using ElectronicStore.API.Middleware;
 using ElectronicStore.infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 namespace ElectronicStore.API
 {
     public class Program
@@ -9,6 +10,14 @@ namespace ElectronicStore.API
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddCors(op =>
+            {
+                op.AddPolicy("CorsPolicy", builder =>
+                {
+                    builder.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("https://localhost:4200");
+
+                });
+            });
             builder.Services.AddMemoryCache();
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -25,6 +34,7 @@ namespace ElectronicStore.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            app.UseCors("CorsPolicy");
             app.UseMiddleware<ExceptionsMiddleware>();
             app.UseStatusCodePagesWithReExecute("/errors/{0}");
             app.UseHttpsRedirection();
